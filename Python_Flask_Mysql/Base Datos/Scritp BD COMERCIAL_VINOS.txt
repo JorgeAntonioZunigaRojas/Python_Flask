@@ -1,0 +1,262 @@
+CREATE SCHEMA COMERCIAL_VINOS;
+USE COMERCIAL_VINOS;
+
+CREATE TABLE CLIENTE
+(
+	id_cliente           INTEGER NOT NULL,
+	tipo                 CHAR(1) NULL,
+	rut                  VARCHAR(15) NULL,
+	fecha_nacimiento     DATETIME NULL,
+	nombres              VARCHAR(60) NULL,
+	apellidos            VARCHAR(60) NULL,
+	correo               VARCHAR(60) NULL,
+	id_login             CHAR(10) NULL,
+	PRIMARY KEY (id_cliente)
+);
+
+
+
+CREATE TABLE CLIENTE_CONTACTO
+(
+	id_cliente           INTEGER NOT NULL,
+	id_contacto          INTEGER NOT NULL,
+	contacto             VARCHAR(60) NULL,
+	telefono             VARCHAR(20) NULL,
+	PRIMARY KEY (id_cliente,id_contacto)
+);
+
+
+
+CREATE TABLE CLIENTE_DIRECCION
+(
+	id_cliente           INTEGER NOT NULL,
+	id_direccion         INTEGER NOT NULL,
+	id_ubigeo            CHAR(6) NULL,
+	des_direccion        VARCHAR(120) NULL,
+	PRIMARY KEY (id_cliente,id_direccion)
+);
+
+
+
+CREATE TABLE LOGIN
+(
+	id_login             CHAR(10) NOT NULL,
+	id_tipousuario       INTEGER NULL,
+	contraseña           VARCHAR(15) NULL,
+	PRIMARY KEY (id_login)
+);
+
+
+
+CREATE TABLE PEDIDO
+(
+	id_pedido            INTEGER NOT NULL,
+	id_tipodocumento     CHAR(2) NULL,
+	serie_documento      CHAR(4) NULL,
+	numero_documento     CHAR(8) NULL,
+	fecha_emision        DATETIME NULL,
+	id_cliente           INTEGER NULL,
+	id_direccion_cliente INTEGER NULL,
+	id_direccion_envio   INTEGER NULL,
+	id_promocion         INTEGER NULL,
+	id_tipopago          INTEGER NULL,
+	subtotal             DECIMAL(12,2) NULL,
+	porc_igv             DECIMAL(12,2) NULL,
+	monto_igv            DECIMAL(12,2) NULL,
+	gastos_envio         DECIMAL(12,2) NULL,
+	PRIMARY KEY (id_pedido)
+);
+
+
+
+CREATE TABLE PEDIDO_DETALLE
+(
+	id_pedido            INTEGER NOT NULL,
+	id_detalle           INTEGER NOT NULL,
+	id_producto          INTEGER NULL,
+	cantidad             DECIMAL(12,2) NULL,
+	precio               DECIMAL(12,2) NULL,
+	costo_caja           DECIMAL(12,2) NULL,
+	PRIMARY KEY (id_pedido,id_detalle)
+);
+
+
+
+CREATE TABLE PRODUCTO
+(
+	id_producto          INTEGER NOT NULL,
+	nombre               VARCHAR(30) NULL,
+	origen               VARCHAR(30) NULL,
+	categoria            VARCHAR(30) NULL,
+	uva_variedad         VARCHAR(30) NULL,
+	uva_porcentaje       INTEGER NULL,
+	crianza              VARCHAR(30) NULL,
+	unada                VARCHAR(30) NULL,
+	precio               DECIMAL(12,2) NULL,
+	cata                 VARCHAR(30) NULL,
+	gastronomia          VARCHAR(30) NULL,
+	temperatura          VARCHAR(30) NULL,
+	comentario           VARCHAR(250) NULL,
+	stock                INTEGER NULL,
+	PRIMARY KEY (id_producto)
+);
+
+
+
+CREATE TABLE PROMOCION
+(
+	id_promocion         INTEGER NOT NULL,
+	fecha_inicio         DATETIME NULL,
+	fecha_final          DATETIME NULL,
+	descripcion          VARCHAR(250) NULL,
+	PRIMARY KEY (id_promocion)
+);
+
+
+
+CREATE TABLE PROMOCION_DETALLE
+(
+	id_promocion         INTEGER NOT NULL,
+	id_producto          INTEGER NULL,
+	porcentaje_descuento DECIMAL(12,2) NULL,
+	PRIMARY KEY (id_promocion)
+);
+
+
+
+CREATE TABLE PROVEEDOR
+(
+	id_proveedor         INTEGER NOT NULL,
+	nombre               VARCHAR(60) NULL,
+	direccion            VARCHAR(120) NULL,
+	correo               VARCHAR(60) NULL,
+	PRIMARY KEY (id_proveedor)
+);
+
+
+
+CREATE TABLE PROVEEDOR_CONTACTO
+(
+	id_proveedor         INTEGER NOT NULL,
+	id_contacto          INTEGER NOT NULL,
+	contacto             VARCHAR(30) NULL,
+	telefono             VARCHAR(20) NULL,
+	PRIMARY KEY (id_proveedor,id_contacto)
+);
+
+
+
+CREATE TABLE TIPO_DOCUMENTO
+(
+	id_tipodocumento     CHAR(2) NOT NULL,
+	nombre               VARCHAR(30) NULL,
+	PRIMARY KEY (id_tipodocumento)
+);
+
+
+
+CREATE TABLE TIPO_PAGO
+(
+	id_tipopago          INTEGER NOT NULL,
+	nombre               VARCHAR(30) NULL,
+	PRIMARY KEY (id_tipopago)
+);
+
+
+
+CREATE TABLE TIPO_USUARIO
+(
+	id_tipousuario       INTEGER NOT NULL,
+	nombre               VARCHAR(30) NULL,
+	PRIMARY KEY (id_tipousuario)
+);
+
+
+
+CREATE TABLE UBIGEO
+(
+	id_ubigeo            CHAR(6) NOT NULL,
+	nombre               VARCHAR(30) NULL,
+	PRIMARY KEY (id_ubigeo)
+);
+
+
+ALTER TABLE CLIENTE
+ADD FOREIGN KEY (id_login) REFERENCES LOGIN (id_login);
+
+
+
+ALTER TABLE CLIENTE_CONTACTO
+ADD FOREIGN KEY (id_cliente) REFERENCES CLIENTE (id_cliente);
+
+
+
+ALTER TABLE CLIENTE_DIRECCION
+ADD FOREIGN KEY (id_cliente) REFERENCES CLIENTE (id_cliente);
+
+
+
+ALTER TABLE CLIENTE_DIRECCION
+ADD FOREIGN KEY (id_ubigeo) REFERENCES UBIGEO (id_ubigeo);
+
+
+
+ALTER TABLE LOGIN
+ADD FOREIGN KEY (id_tipousuario) REFERENCES TIPO_USUARIO (id_tipousuario);
+
+
+
+ALTER TABLE PEDIDO
+ADD FOREIGN KEY (id_cliente) REFERENCES CLIENTE (id_cliente);
+
+
+
+ALTER TABLE PEDIDO
+ADD FOREIGN KEY (id_tipopago) REFERENCES TIPO_PAGO (id_tipopago);
+
+
+
+ALTER TABLE PEDIDO
+ADD FOREIGN KEY (id_tipodocumento) REFERENCES TIPO_DOCUMENTO (id_tipodocumento);
+
+
+
+ALTER TABLE PEDIDO
+ADD FOREIGN KEY (id_cliente, id_direccion_envio) REFERENCES CLIENTE_DIRECCION (id_cliente, id_direccion);
+
+
+
+ALTER TABLE PEDIDO
+ADD FOREIGN KEY (id_promocion) REFERENCES PROMOCION (id_promocion);
+
+
+
+ALTER TABLE PEDIDO
+ADD FOREIGN KEY (id_cliente, id_direccion_cliente) REFERENCES CLIENTE_DIRECCION (id_cliente, id_direccion);
+
+
+
+ALTER TABLE PEDIDO_DETALLE
+ADD FOREIGN KEY (id_pedido) REFERENCES PEDIDO (id_pedido);
+
+
+
+ALTER TABLE PEDIDO_DETALLE
+ADD FOREIGN KEY (id_producto) REFERENCES PRODUCTO (id_producto);
+
+
+
+ALTER TABLE PROMOCION_DETALLE
+ADD FOREIGN KEY (id_promocion) REFERENCES PROMOCION (id_promocion);
+
+
+
+ALTER TABLE PROMOCION_DETALLE
+ADD FOREIGN KEY (id_producto) REFERENCES PRODUCTO (id_producto);
+
+
+
+ALTER TABLE PROVEEDOR_CONTACTO
+ADD FOREIGN KEY (id_proveedor) REFERENCES PROVEEDOR (id_proveedor);
+
+

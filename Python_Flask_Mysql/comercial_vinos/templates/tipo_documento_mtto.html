@@ -1,0 +1,17 @@
+{% extends 'base/base.html' %}
+{% block contenido %}
+
+<form action="/tipo_documento_mtto" method="POST">
+    <div class="form-group">
+    <label for="codigo">Codigo:</label>
+    <input type="text" class="form-control" id="codigo" aria-describedby="Codigo">
+    </div>
+    <div class="form-group">
+        <label for="nombre">Nombre</label>
+        <input type="text" class="form-control" id="nombre">
+    </div>
+    <button type="submit" class="btn btn-primary">Guardar</button>
+</form>
+
+{% endblock %}
+

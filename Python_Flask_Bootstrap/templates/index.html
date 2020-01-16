@@ -1,0 +1,14 @@
+{% extends 'base/base.html' %}
+{% block content %}
+    <section class="jumbotron text-center">
+        <div class="container">
+            <h1 class="jumbotron-heading">Jorge Antonio Zuñiga</h1>
+            <p class="lead text-muted">Hola, mi nombre es Jorge Antonio y disfruto el desarrollo de aplicaciones y explorar
+                nuevas tecnologías.</p>
+            <p>
+                <a href="Correo Electronico:jorgezunigarojas1@gmail.com" class="btn btn-primary my-2">Contactame</a>
+            </p>
+            <img src="{{ url_for('static',filename='img/antonio.png')}}" height=300></img>
+        </div>
+    </section>
+{% endblock %}

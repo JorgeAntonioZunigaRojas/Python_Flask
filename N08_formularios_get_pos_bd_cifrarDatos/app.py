@@ -26,6 +26,15 @@ def signup():
 
     return render_template("signup.html")
 
+@app.route("/login", methods=["GET","POST"])
+def login():
+    if request.method=="POST":
+        user=Users.query.filter_by(username=request.form["usuario_nombre"]).filter()
+        if user and check_password_hash(request.form["password"], user.password):
+            return "Your are logged in"
+        return "Your credentials are invalid, check and try again"
+    return render_template("login.html")
+
 if __name__=="__main__":
     db.create_all()
     app.run(debug=True)

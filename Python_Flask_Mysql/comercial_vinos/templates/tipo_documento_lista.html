@@ -1,0 +1,23 @@
+{% extends 'base/base.html' %}
+{% block contenido %}
+<hr>
+    <table class="table table-hover table-dark">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">CODIGO</th>
+                <th scope="col">NOMBRE</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in parametro_tipo_documento %}
+            <tr>
+                <th scope="row">{{item.Fila}}</th>
+                <td>{{item.codigo}}</td>
+                <td>{{item.nombre}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
