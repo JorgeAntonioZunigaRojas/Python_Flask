@@ -1,0 +1,49 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+    <script>
+        window.onload=function(){
+            document.getElementById('txt_nombre').focus();
+        }
+    </script>
+
+    <!--Inicio = jinja2=motor de plantillas-->
+    {% with messages=get_flashed_messages() %}
+    {% if messages %}
+    {% for message in messages %}
+        <p>{{message}}</p>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+    <!--Final = jinja2=motor de plantillas-->
+    <form action="/add_contact" method="POST">
+        <input class="txt" id="txt_nombre" name="txt_nombre" type="text" placeholder="Nombre">
+        <input class="txt" name="txt_telefono" type="text" placeholder="Telefono">
+        <input class="txt" name="txt_email" type="text" placeholder="email">
+        <button type="submit">Save</button>
+    </form>
+    
+    <table>
+        <thead>
+            <tr>
+                <td>FullName</td>
+                <td>Phone</td>
+                <td>Email</td>
+                <td>Options</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for contact in contacts %}
+                <tr>
+                    <td>{{ contact.nombre }}</td>
+                    <td>{{ contact.telefono }}</td>
+                    <td>{{ contact.email }}</td>
+                    <td>
+                        <a href="/edit/{{contact.id_contacto}}">Edit</a>
+                        <a href="/delete/{{contact.id_contacto}}">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

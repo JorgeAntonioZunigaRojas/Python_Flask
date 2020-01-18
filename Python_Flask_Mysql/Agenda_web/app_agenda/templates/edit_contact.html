@@ -1,0 +1,11 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+    <!--Las columnas "contact.ID_CONTACTO", contact.NOMBRE..etc son sensibles mayusculA Y minusculas -->
+    <form action="/update/{{contact.ID_CONTACTO}}" method="POST">   
+        <input class="txt" id="txt_nombre" name="txt_nombre" type="text" placeholder="Nombre" value="{{contact.NOMBRE}}">
+        <input class="txt" name="txt_telefono" type="text" placeholder="Telefono" value="{{contact.TELEFONO}}">
+        <input class="txt" name="txt_email" type="text" placeholder="email" value="{{contact.EMAIL}}">
+        <button type="submit">Save</button>
+    </form>
+{% endblock %}
