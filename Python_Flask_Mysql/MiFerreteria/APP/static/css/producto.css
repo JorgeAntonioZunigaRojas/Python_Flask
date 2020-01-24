@@ -1,0 +1,41 @@
+.producto_imagen{
+    height: 250px;
+    border: 1px solid black;
+    border-radius: 10px;
+    margin: 20px auto;
+    display: block;
+}
+.producto_nombre{
+    margin: 0;
+    text-align: center;
+}
+.producto_precio{
+    margin: 0;
+    display: block;
+    text-align: center;
+}
+
+.precio_untario{
+    font-size: 30px;
+    font-weight: bold;
+}
+.producto_datos,
+.producto_atributos{
+    width: 1200px;
+    margin: 20px auto;
+}
+.tabla{
+    width: 100%;
+    border: 1px solid rgb(158, 158, 158);
+}
+.titulo_columna{
+    background-color: #1293d4;
+    color: aliceblue;
+}
+.atributo,
+.detalle{
+    border: 1px solid rgb(158, 158, 158);
+}
+.atributo{
+    width: 200px;
+}

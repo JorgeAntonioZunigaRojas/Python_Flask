@@ -1,0 +1,133 @@
+body{
+    font: 15px Arial, sans-serif;
+    padding: 0;
+    margin: 0;
+    background-color: #f4f4f4;
+}
+
+/*Estilos Globales*/
+.contenedor{
+    width: 80%;
+    margin: auto;
+    overflow: hidden;
+}
+ul{
+    margin: 0;
+    padding: 0;
+}
+.boton1{
+    height: 38px;
+    background-color: #e8491d;
+    border: 0;
+    padding-left: 20px;
+    padding-right: 20px;
+    color: #fff;
+}
+
+/*Estilos para Encabezados*/
+header{
+    background-color: #24282b;
+    color: #fff;
+    padding-top: 30px;
+    min-width: 70px;
+    border-bottom: 5px solid #1293d4;
+}
+
+header a{
+    color: #fff;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-size: 16px;
+}
+header li{
+    float: left;
+    display: inline;
+    padding: 0 20px 0 20px;
+}
+header #marca{
+    float: left;
+}
+header #marca h1{
+    margin: 0 0 30px 0;
+}
+header nav{
+    float: right;
+    margin-top: 10px;
+}
+header .resaltado, header .actual a{
+    color: #1293d4;
+    font-weight: bold;
+}
+header a:hover{
+    color: #ccc;
+    font-weight: bold;
+}
+/*Cabecera con Imagenes*/
+#cabecera{
+    height: 300px;
+    /*background: url('../img/fondo1.jpg');*/
+    text-align: center;
+    color: #24282b;
+}
+
+#cabecera #banner_fondo{
+    width: 100%;
+    height: 100%;
+}
+
+#cabecera h1{
+    width: 900px;
+    position: absolute;
+    top: 20px;
+    left: calc((100% - 900px)/2);
+    margin-top: 200px;
+    font-size: 30px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    /*border: 2px solid black;*/
+    /*padding: 0 calc((100% - 800px)/2);*/
+}
+
+/*Formulario Boletines*/
+#boletin{
+    padding: 15px;
+    color: #fff;
+    background: #24282b;
+}
+#boletin h1{
+    float: left;
+}
+#boletin form{
+    float: right;
+    margin-top: 15px;
+}
+#boletin input[type="email"]{
+    padding: 4px;
+    height: 25px;
+    width: 250px;
+}
+#cajas{
+    margin-top: 20px;
+}
+#cajas .caja{
+    float: left;
+    text-align: center;
+    width: 30%;
+    padding: 10px;
+}
+#cajas .caja img{
+    width: 90px;
+    height: 90px;
+    border-radius: 10px;
+    border: 1px solid black;
+}
+/*Footer=Pie de pagina*/
+footer{
+    padding: 20px;
+    margin-top: 50px;
+    background-color: #1293d4;
+    color: #fff;
+    text-align: center;
+    
+}
+

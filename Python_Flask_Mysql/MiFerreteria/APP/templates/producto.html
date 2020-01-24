@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/producto.css') }}">
+    <!--
+    <link rel="stylesheet" href="../static/css/producto.css">
+    -->
+    <title>Document</title>
+</head>
+<body>
+    <section class="producto_datos">
+        <img class="producto_imagen" src="{{ url_for('static', filename='img/'+producto.imagen) }}" alt="">
+        <h2 class="producto_nombre">{{producto.nombre}}</h2>
+        <P class="producto_precio">{{producto.moneda}}<span class="precio_untario"> {{producto.precio}} </span>C/U</P>
+    </section>
+
+    <section class="producto_atributos">
+        <header>
+            <h3><span>Características</span></h3>
+        </header>
+        <section>
+            <table class="tabla">
+                <thead>
+                    <tr>
+                        <th class="titulo_columna">ATRIBUTO</th>
+                        <th class="titulo_columna">DETALLE</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for catacteristica in producto_caracteristicas %}
+                        <tr class="row">
+                            <td class="atributo">{{catacteristica.atributo}}</td>
+                            <td class="detalle">{{catacteristica.detalle}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    </section>
+</body>
+</html>

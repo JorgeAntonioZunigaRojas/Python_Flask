@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="author" content="ANTONIO ZUÑIGA ROJAS">
+    <link rel="stylesheet" href="css/style.css">
+    <title>{{data[0].empresa_nombre}}</title>
+</head>
+<body>
+    <header>
+        <div class="contenedor">
+            <div id="marca">
+                <h1>{{data[0].empresa_nombre}}</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li class="actual"><a href="index.html">Inicio</a></li>
+                    <li><a href="nosotros.html">Nosotros</a></li>
+                    <li><a href="servicios.html">Servicios</a></li>
+                    <li><a href="contacto.html">Contacto</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <section id="cabecera">
+        <div class="contenedor">
+            <h1>{{data[0].empresa_mprincipal}}<h1>
+        </div>
+    </section>
+
+    <section id="boletin">
+        <div class="contenedor">
+            <h1>Suscribete a nuestras ofertas</h1>
+            <form>
+                <input type="email" name="email" placeholder="Ingrese Email...">
+                <button type="submit" class="boton1">Suscribete</button>
+            </form>
+        </div>
+    </section>
+
+    <section id="cajas">
+        <div class="contenedor">
+
+            {% for registro in data %}
+                <div class="caja">
+                    <h4>{{registro.producto_nombre}}</h4>
+                    <img src={{"img/"+registro.producto_imagen}} alt="">
+                    <input type="button" value="Ver">
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+    <footer>
+        <p>{{data[0].empresa_pie_pagina}}</p>
+    </footer>
+</body>
+</html>
+

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="author" content="ANTONIO ZUÑIGA ROJAS">
+    <title>{{data[0].empresa_nombre}}</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!--
+    <link rel="stylesheet" href="../static/css/style.css">
+    -->
+</head>
+<body>
+    <header>
+        <div class="contenedor">
+            <div id="marca">
+                <h1>{{data[0].empresa_nombre}}</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li class="actual"><a href="#">Inicio</a></li>
+                    <li><a href="#">Nosotros</a></li>
+                    <li><a href="#">Servicios</a></li>
+                    <li><a href="#">Contacto</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <section id="cabecera">
+        <img src="{{ url_for('static', filename='img/'+data[0].empresa_banner_fondo) }}" alt="" id="banner_fondo">
+        <div class="contenedor">
+            <h1>{{data[0].empresa_banner_texto}}<h1>
+        </div>
+    </section>
+
+    <section id="boletin">
+        <div class="contenedor">
+            <h1>Suscribete a nuestras ofertas</h1>
+            <form>
+                <input type="email" name="email" placeholder="Ingrese Email...">
+                <button type="submit" class="boton1">Suscribete</button>
+            </form>
+        </div>
+    </section>
+
+    <section id="cajas">
+        <div class="contenedor">
+
+            {% for registro in data %}
+                <div class="caja">
+                    <img src={{"img/"+registro.producto_imagen}} alt=""><br>
+                    <h4>{{registro.producto_nombre}}</h4>
+                    <a href="/producto/{{registro.producto_id_producto}}">Ver</a>
+                    <!--
+                    <input type="button" value="Ver" class="cb_ver" id={{registro.producto_id_producto}} onclick="ver({{registro.producto_id_producto}})">
+                        <input type="button" value="Ver" class="cb_ver">
+                    -->
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+    <footer>
+        <p>{{data[0].empresa_pie_pagina}}</p>
+    </footer>
+</body>
+</html>
+
