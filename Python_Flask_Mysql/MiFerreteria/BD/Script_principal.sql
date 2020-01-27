@@ -47,18 +47,25 @@ DELIMITER ;
 DELIMITER $$
 CREATE PROCEDURE SP_PRODUCTO_Q02(IN codigo int)
 BEGIN
-	SELECT	P.id_producto as id_producto,
-			P.nombre as nombre,
-			P.moneda as moneda,
-			P.precio as precio,
-			P.imagen as imagen,
-			P.estado as estado,
-			C.atributo AS atributo, 
-			C.detalle AS detalle
-	FROM	PRODUCTO P INNER JOIN
-			PRODUCTO_CARACTERISTICA C ON P.id_producto=C.id_producto
-	WHERE	P.id_producto=codigo
-    ORDER BY C.atributo;
+	SELECT	id_producto,
+			nombre,
+			moneda,
+			precio,
+			imagen,
+			estado
+	FROM	PRODUCTO
+	WHERE	id_producto=codigo;
+END;$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE PROCEDURE SP_PRODUCTO_Q03(IN codigo int)
+BEGIN
+	SELECT	atributo,
+			detalle
+	FROM	PRODUCTO_CARACTERISTICA
+	WHERE	id_producto=codigo
+    ORDER BY atributo;
 END;$$
 DELIMITER ;
 
@@ -119,4 +126,4 @@ SELECT 34,4,'Recomendaciones','Guardar el fierro colocándolo sobre palos de mad
 SELECT 35,4,'Tipo','Estribos';
 
 
-call SP_PRODUCTO_Q02(1)
+call SP_PRODUCTO_Q03(1)
