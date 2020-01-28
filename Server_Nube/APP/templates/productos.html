@@ -1,0 +1,76 @@
+{% extends 'layout.html' %}
+{% block title %}Home{% endblock %}
+{% block content %}
+
+<style>
+    .foto{
+        width: 50px;
+    }
+</style>
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+<h2>Mantenimiento de productos</h2>
+<br>
+<button type="button" class="btn btn-success">Agregar Producto</button>
+<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Nuevo</button>
+
+<hr>
+<table class="table table-striped">
+    <tr>
+        <td>Codigo</td>
+        <td>Categoria</td>
+        <td>Nombre</td>
+        <td>Descripcion</td>
+        <td>Precio</td>
+        <td>Stock</td>
+        <td>Foto</td>
+        <td></td>
+        <td></td>
+    </tr>
+    {% for item in prod %}
+        <tr>
+            <td>{{item.cod}}</td>
+            <td>{{item.categoria}}</td>
+            <td>{{item.nombre}}</td>
+            <td>{{item.descripcion}}</td>
+            <td>{{item.precio}}</td>
+            <td>{{item.stock}}</td>
+            <td><img class="foto" src="{{url_for('static',filename='img/'+item.foto)}}" alt=""></td>
+            <td> <a class="btn btn-warning" href="">Editar</a></td>
+            <td> <a class="btn btn-danger" href="">Eliminar</a></td>
+        </tr>
+    {% endfor %}
+</table>
+
+
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">NUEVO Producto</h4>
+            </div>
+            <div class="modal-body">
+                <form action="{{ url_for('agregar_producto') }}" method="POST" enctype="multipart/form-data">
+
+                    <div class="form-group">
+                        <label>Nombre:</label>
+                        <input type="text" class="form-control" name="nama">
+                        <br>
+                        <input type="file" class="custom-file-input" name="image" id="image">
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-primary" type="sbumit">Guardar</button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /.container -->
+
+{% endblock %}
