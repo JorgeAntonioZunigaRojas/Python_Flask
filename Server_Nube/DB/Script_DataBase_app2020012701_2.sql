@@ -1,7 +1,6 @@
 create schema comercio;
 use comercio;
 
-
 CREATE TABLE usuarios (
   codigo int(11) NOT NULL AUTO_INCREMENT,
   usuario varchar(50) NOT NULL,
@@ -76,5 +75,22 @@ update productos set foto='fresa.jpg' where cod=2;
 update productos set foto='mverde.png' where cod=1;
 update productos set foto='naranja.jpg' where cod=3;
 update productos set foto='papaya.jpg' where cod=4;
+
+
+delimiter $$
+create procedure sp_producto_i01(
+ar_categoria int(11), 
+ar_nombre varchar(20), 
+ar_descripcion text, 
+ar_precio decimal(6,2), 
+ar_stock int(11), 
+ar_foto varchar(100))
+begin
+	insert into productos(categoria, nombre, descripcion, precio, stock, foto)
+    values(ar_cod, ar_categoria, ar_nombre, ar_descripcion, ar_precio, ar_stock, ar_foto);
+end; $$
+delimiter $$
+
+
 
 select cod, categoria, nombre, descripcion, precio, stock, foto from productos;

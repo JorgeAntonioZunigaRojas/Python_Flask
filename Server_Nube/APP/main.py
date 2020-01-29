@@ -156,20 +156,45 @@ def producto():
     else:
         msg='No existe productos que mostrar'
 
-
-@app.route('/agregar_producto', methods=['POST'])
+@app.route('/agregarproducto', methods=['POST'])
 def agregar_producto():
-    '''
-    mana=request.form['nama']
-    image = request.files["image"]
-    image.save(os.path.join(app.config["IMAGE_UPLOADS"], image.filename))
-
-    cur=mysql.connection.cursor()
-    cur.execute("INSERT INTO cliente(nombre, logo) values(%s, %s)", (mana, image.filename,))
+    categoria = request.form['categoria']
+    nombre = request.form['nombre']
+    descripcion = request.form['descripcion']
+    precio = request.form['precio']
+    stock = request.form['stock']
+    archivo = request.files["image"]
+    archivo.save(os.path.join(app.config["IMAGE_UPLOADS"], archivo.filename))
+    cur = mysql.connection.cursor()
+    cur.callproc('sp_producto_i01', [categoria, nombre, descripcion, precio, stock, archivo.filename])
     mysql.connection.commit()
-    '''
+    cur.close()
     return redirect(url_for('producto'))
 
+@app.route('/eliminar_producto/<int:id_data>', methods=['GET'])
+def eliminar_producto(id_data):
+    cur = mysql.connection.cursor()
+    script_sql="delete from productos where cod="+str(id_data)
+    print(script_sql)
+    cur.execute(script_sql)
+    mysql.connection.commit()
+    cur.close()
+    return redirect(url_for('producto'))
+
+@app.route('/editar_producto', methods=['POST'])
+def editar_producto():
+    codigo = request.form['codigo']
+    categoria = request.form['categoria']
+    nombre = request.form['nombre']
+    descripcion = request.form['descripcion']
+    precio = request.form['precio']
+    stock = request.form['stock']
+    archivo = request.files["image"]
+    cur = mysql.connection.cursor()
+    cur.execute("update productos set categoria=%s, nombre=%s, descripcion=%s, precio=%s, stock=%s where cod=%s", (categoria, nombre, descripcion, precio, stock, codigo))
+    mysql.connection.commit()
+    cur.close()
+    return redirect(url_for('producto'))
 
 if __name__ == "__main__":
     app.secret_key = 'codigo2020'
