@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Listado de Mentores</title>
+</head>
+<body>
+    <h1>Estos son nuestros mentores</h1>
+    <hr>
+    <table border=4>
+        <tr>
+            <td>Codigo</td>
+            <td>Nombre</td>
+            <td>Correo</td>
+            <td></td>
+            <td></td>
+        </tr>
+        {% for item in mentores %}
+            <tr>
+                <td>{{item._id}}</td>
+                <td>{{item.nombre}}</td>
+                <td>{{item.correo}}</td>
+                <td><a href="#!">Eliminar</a></td>
+                <td><a href="#!">Actualizar</a></td>
+            </tr>
+        {% endfor %}
+    </table>
+    <a href="{{url_for('index')}}">Volver</a>
+</body>
+</html>
