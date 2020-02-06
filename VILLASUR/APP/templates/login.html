@@ -1,0 +1,33 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+Login
+{% endblock  %}
+
+{% block contenido %}
+    <link rel="stylesheet" href="{{url_for('static', filename='css/login_signup_style.css')}}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
+
+    <div class="login">
+        <h1>Login</h1>
+        <div class="links">
+            <a href="{{url_for('login')}}" class="active">Login</a>
+            <a href="{{url_for('signup')}}">Sign-Up</a>
+        </div>
+        <form action="{{url_for('login')}}" method="post">
+            <label for="txt_idusuaio">
+                <i class="fas fa-user"></i>
+            </label>
+            <input type="text" name="txt_idusuaio" placeholder="ID Usuario" id="txt_idusuaio" required>
+
+            <label for="txt_contraseña">
+                <i class="fas fa-lock"></i>
+            </label>
+            <input type="password" name="txt_contraseña" placeholder="Contraseña" id="txt_contraseña" required>
+
+            <div class="msg">{{msg}}</div>
+            <input type="submit" value="Login">
+        </form>
+    </div>
+{% endblock %}
+

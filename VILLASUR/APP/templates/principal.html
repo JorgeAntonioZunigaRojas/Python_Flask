@@ -1,0 +1,175 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+    Principal
+{% endblock  %}
+
+{% block contenido %}
+    <style>
+        .div_login_img{
+            background-color: white;
+            border-radius: 50%;
+            margin-left: 10px;
+        }
+        .login_img{
+            width: 50px;
+            border-radius: 50%;
+        }
+        .categoria_seleccionada{
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        table tr .login,
+        table tr .signup{
+            text-decoration: none;
+            font-size: 14px;
+            color: #949D9A;
+        }
+
+        table tr .login:hover{
+            color: white;
+        }
+
+        table tr .signup:hover{
+            color: white;
+        }
+        /*PRODUCTOS-Inicio estilos****************************/
+        body{
+            background: white;
+            /*
+            width: 1200px;
+            margin: 10px auto;
+            */
+        }
+        .cuerpo{
+            width: 90%;
+            margin: 0px auto;
+        }
+        .producto{
+            width: 220px;
+            border: 1px solid gray;
+            background:white;
+            display: inline-block;
+            margin: 5px 10px;
+        }
+        .producto .imagen_producto{
+            width: 100%;
+            height: 210px;
+        }
+        .producto .caracteristicas{
+            width: 100%;
+            padding: 10px 10px 0 10px;
+        }
+        .producto .btn_agregar_div{
+            width: 235px;
+            padding: 0px 10px 10px 10px;
+        }
+
+        .producto .caracteristicas .nombre{
+            display: block;
+            height: 20px;
+        }
+
+        .nombre{
+            color: #666666;
+            width: 100%;
+        }
+        .marca{
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #78B800;
+            display: inline-block;
+            height: 20px;
+        }
+        .descripcion{
+            color: #A0A09C;
+            display: block;
+            height: 20px;
+        }
+        .precio{
+            color: red;
+            font-weight: bold;
+            font-size: 30px;
+        }
+        .unidad{
+            background-color: #5CB85C;
+            border-radius: 3px;
+            color: white;
+            padding: 1px 4px;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+        .producto .btn_agregar_div .btn_agregar{
+            display: inline-block;
+            text-decoration: none;
+            text-align: center;
+            border: none;
+            width: calc(100% - 20px);
+            height: 30px;
+            background: white;
+            border: 1px solid red;
+            color: red;
+        }
+
+        .producto .btn_agregar_div .btn_agregar:hover{
+            
+            background-color: red;
+            color: white;
+            cursor: pointer;
+        }
+        /*PRODUCTOS-Final estilos****************************/
+    </style>
+
+    <!--#########################################################################################################################################################################-->
+    <link rel="stylesheet" href="{{url_for('static', filename='css/estilos.css')}}">
+    <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <!--#########################################################################################################################################################################-->
+
+    <!--#########################################################################################################################################################################-->
+    <div class="sidebar">
+        <h2>CATEGORIAS</h2>
+        <ul>
+            {% for categoria in categorias %}
+                <li><a href="/principal/{{categoria.id_categoria}}">{{categoria.nombre}}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="contenido">
+        <div>
+            <img src="{{url_for('static', filename='img/menu_vertical.jpg')}}" alt="" class="menu-bar">
+            <span class="categoria_seleccionada">{{categoria_seleccionada}}</span>
+        </div>
+        <div class="cuerpo">
+            {% for producto in productos %}
+                <div class="producto"
+                    {% if producto.id_producto in carrito_items %} 
+                        style="background: rgb(255, 255, 175);"
+                    {% endif %}>
+                    <div>
+                        <img class="imagen_producto" src="{{url_for('static', filename='img/'+producto.imagen)}}" alt="">
+                    </div>
+                    <div class="caracteristicas">
+                        <div>
+                            <span class="nombre">{{producto.id_producto}}{{producto.nombre}}</span><br>
+                            <span class="marca">{{producto.marca}}</span><br>
+                            <span class="descripcion">{{producto.descripcion}}</span>
+                        </div>
+                        <div>
+                            <span class="precio">S/ {{producto.precio}}</span><span class="unidad">{{producto.unidad}}</span>
+                        </div>
+                    </div>
+                    <div class="btn_agregar_div">
+                        {% if session_estado==0 %}
+                            <a href="{{url_for('login')}}" class="btn_agregar">Agregar al Carro</a>
+                        {% else %}
+                            <a href="/agregar_carrito/{{producto.id_producto}}/{{producto.id_categoria}}" class="btn_agregar">Agregar al Carro</a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <script src="{{url_for('static', filename='js/abrir.js')}}"></script>
+    <!--#########################################################################################################################################################################-->
+
+{% endblock %}

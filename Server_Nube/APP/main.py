@@ -15,6 +15,8 @@ app.config['MYSQL_DB'] = 'comercio'
 app.config['MYSQL_PORT'] = 3306
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
+app.config["IMAGE_UPLOADS"] = "/Tecsup-codiGO/Python_Flask/Server_Nube/APP/static/img"
+
 '''
 # Configuracion a MySQL NUBE
 app.config['MYSQL_HOST'] = 'q3vtafztappqbpzn.cbetxkdyhwsb.us-east-1.rds.amazonaws.com'
@@ -27,9 +29,11 @@ app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
 mysql = MySQL(app)
 
+
 @app.route('/')
 def index():
     return redirect(url_for('login'))
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -54,21 +58,23 @@ def login():
 
 @app.route('/home')
 def home():
-    #chequear si el usuario esta logeado
+    # chequear si el usuario esta logeado
     if 'loggedin' in session:
         return render_template('home.html', username=session['username'])
     return redirect(url_for('login'))
 
-#https://flask.palletsprojects.com/en/1.1.x/patterns/fileuploads/
+
+# https://flask.palletsprojects.com/en/1.1.x/patterns/fileuploads/
 
 @app.route('/profile')
 def profile():
     if 'loggedin' in session:
         cur = mysql.connection.cursor()
-        cur.callproc('usuario_codigo',[session['id']])
+        cur.callproc('usuario_codigo', [session['id']])
         usuario = cur.fetchone()
-        return render_template('profile.html',usuario=usuario)
+        return render_template('profile.html', usuario=usuario)
     return redirect(url_for('login'))
+
 
 @app.route('/logout')
 def logout():
@@ -79,7 +85,9 @@ def logout():
     # Redireccionar al Login
     return redirect(url_for('login'))
 
-app.config["IMAGE_UPLOADS"] = "/Tecsup-codiGO/Python_Flask/Server_Nube/APP/static/img"
+
+
+
 
 @app.route('/registrar', methods=['GET', 'POST'])
 def registrar():
@@ -114,6 +122,7 @@ def registrar():
         msg = 'Por Favor Llene Los Campos en el Formulario!'
     return render_template('registrar.html', msg=msg)
 
+
 @app.route('/editar', methods=['GET', 'POST'])
 def editar():
     msg = ""
@@ -144,17 +153,19 @@ def editar():
         msg = 'Por Favor Llene Los Campos en el Formulario!'
     return render_template('registrar.html', msg=msg)
 
+
 @app.route('/producto')
 def producto():
-    cur=mysql.connection.cursor()
-    resultado=cur.execute("select * from productos")
-    productos=cur.fetchall()
+    cur = mysql.connection.cursor()
+    resultado = cur.execute("select * from productos")
+    productos = cur.fetchall()
     cur.close()
 
-    if len(productos)>0:
+    if len(productos) > 0:
         return render_template('productos.html', prod=productos)
     else:
-        msg='No existe productos que mostrar'
+        msg = 'No existe productos que mostrar'
+
 
 @app.route('/agregarproducto', methods=['POST'])
 def agregar_producto():
@@ -164,18 +175,38 @@ def agregar_producto():
     precio = request.form['precio']
     stock = request.form['stock']
     archivo = request.files["image"]
-    archivo.save(os.path.join(app.config["IMAGE_UPLOADS"], archivo.filename))
-    cur = mysql.connection.cursor()
-    cur.callproc('sp_producto_i01', [categoria, nombre, descripcion, precio, stock, archivo.filename])
+    archivo_extension = archivo.filename.rsplit('.', 1)[1].lower()
+
+    cursor = mysql.connection.cursor()
+    resultado=cursor.callproc("sp_producto_q01")
+    codigo=cursor.fetchone()['nuevo_codigo']
+    archivo_nombre = str(codigo) + '.' + archivo_extension
+    cursor.close()
+
+    cursor = mysql.connection.cursor()
+    cursor.callproc('sp_producto_i01', [codigo, categoria, nombre, descripcion, precio, stock, archivo_nombre])
     mysql.connection.commit()
-    cur.close()
+    cursor.close()
+
+    archivo.save(os.path.join(app.config["IMAGE_UPLOADS"], archivo_nombre))
     return redirect(url_for('producto'))
+
 
 @app.route('/eliminar_producto/<int:id_data>', methods=['GET'])
 def eliminar_producto(id_data):
+    cursor=mysql.connection.cursor()
+    cursor.callproc('sp_producto_q03',[int(id_data)])
+    producto=cursor.fetchone()
+    archivo=app.config["IMAGE_UPLOADS"]+'/'+producto['foto']
+
+    print(archivo)
+
+    if os.path.exists(archivo):
+        os.remove(archivo)
+
     cur = mysql.connection.cursor()
-    script_sql="delete from productos where cod="+str(id_data)
-    print(script_sql)
+    script_sql = "delete from productos where cod=" + str(id_data)
+
     cur.execute(script_sql)
     mysql.connection.commit()
     cur.close()
@@ -191,13 +222,53 @@ def editar_producto():
     stock = request.form['stock']
     archivo = request.files["image"]
     cur = mysql.connection.cursor()
-    cur.execute("update productos set categoria=%s, nombre=%s, descripcion=%s, precio=%s, stock=%s where cod=%s", (categoria, nombre, descripcion, precio, stock, codigo))
+    cur.execute("update productos set categoria=%s, nombre=%s, descripcion=%s, precio=%s, stock=%s where cod=%s",
+                (categoria, nombre, descripcion, precio, stock, codigo))
     mysql.connection.commit()
     cur.close()
     return redirect(url_for('producto'))
 
+
+#Categorias Inicio______________________________________________________________________________________________________
+@app.route('/categoria')
+def categoria():
+    cursor = mysql.connection.cursor()
+    resultado = cursor.callproc("sp_categoria_q01")
+    registros=cursor.fetchall()
+    cursor.close()
+    return render_template('categoria.html', categorias=registros)
+
+@app.route('/agregar_categoria', methods=['POST'])
+def agregar_categoria():
+    cursor = mysql.connection.cursor()
+    nombre = request.form['nombre']
+    resultado = cursor.callproc("sp_categoria_i01", [nombre])
+    mysql.connection.commit()
+    cursor.close()
+    return redirect(url_for('categoria'))
+
+@app.route('/editar_categoria', methods=['POST'])
+def editar_categoria():
+    cursor = mysql.connection.cursor()
+    codigo = request.form['codigo']
+    nombre = request.form['nombre']
+    estado = request.form['estado']
+    resultado = cursor.callproc("sp_categoria_u01", [codigo, nombre, estado])
+    mysql.connection.commit()
+    cursor.close()
+    return redirect(url_for('categoria'))
+
+@app.route('/eliminar_categoria/<int:id_data>', methods=['GET'])
+def eliminar_categoria(id_data):
+    cur = mysql.connection.cursor()
+    cur.callproc('sp_categoria_d01', [id_data])
+    mysql.connection.commit()
+    cur.close()
+    return redirect(url_for('categoria'))
+
+#Categorias Final_______________________________________________________________________________________________________
+
+
 if __name__ == "__main__":
     app.secret_key = 'codigo2020'
     app.run(debug=True, port=7000)
-
-

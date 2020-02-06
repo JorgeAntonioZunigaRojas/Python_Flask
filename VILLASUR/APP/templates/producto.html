@@ -1,0 +1,303 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+    Productos
+{% endblock  %}
+
+{% block contenido %}
+    <style>
+        .div_login_img{
+            background-color: white;
+            border-radius: 50%;
+            margin-left: 10px;
+        }
+        .login_img{
+            width: 50px;
+            border-radius: 50%;
+        }
+        
+        table tr .login,
+        table tr .signup{
+            text-decoration: none;
+            font-size: 14px;
+            color: #949D9A;
+        }
+
+        table tr .login:hover,
+        table tr .signup:hover{
+            color: white;
+        }
+
+        .carrito_div{
+            background-color: white;
+            border-radius: 10px;
+            margin-right: 10px;
+        }
+        .carrito{
+            width: 50px;
+            border-radius: 10px;
+        }
+        .carrito_items_div{
+            text-align: center;
+            background-color: yellow;
+            width: 25px;
+            color: black;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+        .contenedor{
+            width: 1600px;
+            margin: 10px auto;
+        }
+        #tabla_lista{
+            margin-top: 10px;
+            border: 1px solid #DEE2E6  ;
+        }
+        hr{
+            margin: 0.5em;
+        }
+        .boton{
+            width: 100px;
+            font-size: 11px;
+        }
+
+        #tabla_lista th{
+            background-color: #343A40;
+            color: white;
+        }
+        
+        #tabla_lista td,
+        #tabla_lista th{
+            padding: 3px;
+        }
+
+        .imagen_producto{
+            height: 30px;
+            padding: 0;
+            margin: 0;
+        }
+
+        /*Modal Inicio*/
+        .modal-dialog{
+            top: 100px;
+        }
+        .modal .modal-dialog .modal-content .btn{
+            font-size: 11px;
+        }
+        .modal .modal-dialog .modal-content table,
+        .modal .modal-dialog .modal-content .modal-title{
+            font-size: 13px;
+        }
+        .modal .modal-dialog .modal-content .btn{
+            width: 100px;
+            height: 28px;
+            padding: 0px;
+        }
+        .modal-footer{
+            padding: 3px;
+        }
+        .modal-header{
+            padding: 5px;
+        }
+
+        input[type='text']{
+            width: 400px;
+        }
+        .tabla_datos td,
+        .tabla_datos tr{
+            border: none;
+            background: white;
+        }
+        .tabla_datos tr:hover,
+        .tabla_datos td:hover{
+            background: white;
+        }
+
+        .imagen{
+            opacity: 1;
+            padding-left: 0px;
+            font-size: 13px;
+            margin-top: 10px;
+        }
+        /*Modal Final*/
+    </style>
+    
+    <div class="contenedor">
+        <h4>LISTA DE PRODUCTOS</h4>
+        <hr>
+        <button type="button" class="btn btn-primary boton" id="btn_agregar" data-toggle="modal" data-target="#exampleModal">Agregar</button>
+
+        <table id="tabla_lista" class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Codigo</th>
+                <th scope="col">categoria</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Marca</th>
+                <th scope="col">Descripcion</th>
+                <th scope="col">Precio</th>
+                <th scope="col">Stock</th>
+                <th scope="col">Unidad</th>
+                <th scope="col">Imagen</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for producto in productos %}
+                    <tr>
+                        <th scope="row">{{producto.id_producto}}</th>
+                        <td>{{producto.categoria}}</td>
+                        <td>{{producto.nombre}}</td>
+                        <td>{{producto.marca}}</td>
+                        <td>{{producto.descripcion}}</td>
+                        <td>{{producto.precio}}</td>
+                        <td>{{producto.stock}}</td>
+                        <td>{{producto.unidad}}</td>
+                        <td>
+                            <img src="{{url_for('static', filename='img/'+producto.imagen)}}" alt="" class="imagen_producto">                            
+                        </td>
+
+                        <td>
+                            <a href="#!" class="btn btn-warning boton" data-toggle="modal" data-target="#exampleModal{{producto.id_producto}}">Modificar</a>
+                            <a href="/eliminar_producto/{{producto.id_producto}}" class="btn btn-danger boton" onclick="return confirm('¿Esta seguro de ELIMINAR?')">Eliminar</a>
+                        </td>
+
+                        <td>
+                            <div class="modal fade" id="exampleModal{{producto.id_producto}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <form action="{{url_for('modificar_producto')}}" method="post" enctype="multipart/form-data">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">MODIFICAR Producto</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="form-group" style="display: none;">
+                                                    <label for="txt_codigo">Codigo: </label>
+                                                    <input type="text" name="txt_codigo" required value="{{producto.id_producto}}" >
+                                                 </div>
+                                                <table class="tabla_datos">
+                                                    <tr> 
+                                                        <td><label for="cb_categoria">Categoria: </label></td>
+                                                        <td>
+                                                            <select name="cb_categoria" class="form-control form-control-sm" required>
+                                                                {% for categoria in categorias %}
+                                                                    <option>{{categoria.id_categoria|string+'-'+categoria.nombre}}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                                    <tr> 
+                                                        <td><label for="txt_nombre">Nombre: </label></td>
+                                                        <td><input type="text" name="txt_nombre" maxlength="60" required value="{{producto.nombre}}" ></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><label for="txt_marca">Marca: </label></td>
+                                                        <td><input type="text" name="txt_marca" maxlength="30" required value="{{producto.marca}}"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><label for="txt_descripcion">Descripcion: </label></td>
+                                                        <td><input type="text" name="txt_descripcion" maxlength="30" required value="{{producto.descripcion}}"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><label for="txt_precio">Precio: </label></td>
+                                                        <td><input type="number" name="txt_precio" required value="{{producto.precio}}"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><label for="txt_stock">Stock: </label></td>
+                                                        <td><input type="number" name="txt_stock" value="{{producto.stock}}"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><label for="txt_unidad">Unidad: </label></td>
+                                                        <td><input type="text" name="txt_unidad" maxlength="5" required value="{{producto.unidad}}"></td>
+                                                    </tr>
+                                                </table>
+                                                
+                                                <!--
+                                                <div>
+                                                    <input type="file" class="custom-file-input imagen" name="image" required >
+                                                </div>
+                                                -->
+                                            </div>
+                                            <div class="modal-footer">
+                                                <input type="submit" class="btn btn-primary" value="Guardar">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modal-inicio Nuevo-->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form action="{{url_for('agregar_producto')}}" method="post" enctype="multipart/form-data">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Agregar Producto</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <table class="tabla_datos">
+                            <tr> 
+                                <td><label for="cb_categoria">Categoria: </label></td>
+                                <td>
+                                    <select name="cb_categoria" class="form-control form-control-sm" required>
+                                        {% for categoria in categorias %}
+                                            <option>{{categoria.id_categoria|string+'-'+categoria.nombre}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr> 
+                                <td><label for="txt_nombre">Nombre: </label></td>
+                                <td><input type="text" name="txt_nombre" maxlength="60" required ></td>
+                            </tr>
+                            <tr>
+                                <td><label for="txt_marca">Marca: </label></td>
+                                <td><input type="text" name="txt_marca" maxlength="30" required ></td>
+                            </tr>
+                            <tr>
+                                <td><label for="txt_descripcion">Descripcion: </label></td>
+                                <td><input type="text" name="txt_descripcion" maxlength="30" required ></td>
+                            </tr>
+                            <tr>
+                                <td><label for="txt_precio">Precio: </label></td>
+                                <td><input type="number" name="txt_precio" required ></td>
+                            </tr>
+                            <tr>
+                                <td><label for="txt_stock">Stock: </label></td>
+                                <td><input type="number" name="txt_stock"></td>
+                            </tr>
+                            <tr>
+                                <td><label for="txt_unidad">Unidad: </label></td>
+                                <td><input type="text" name="txt_unidad" maxlength="5" required></td>
+                            </tr>
+                        </table>
+
+                        <div>
+                            <input type="file" class="custom-file-input imagen" name="image" required >
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="submit" class="btn btn-primary" value="Guardar">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Modal-Final Nuevo-->
+{% endblock %}
+

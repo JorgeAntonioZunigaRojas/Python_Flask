@@ -1,3 +1,4 @@
+drop schema comercio;
 create schema comercio;
 use comercio;
 
@@ -51,7 +52,7 @@ Delimiter ;
 
 
 create table productos(
-cod int primary key auto_increment,
+cod int primary key,
 categoria int,
 nombre varchar(20),
 descripcion text,
@@ -59,38 +60,108 @@ precio decimal(6,2),
 stock int,
 foto varchar(100));
 
-insert into productos(categoria,nombre,descripcion,precio,stock,foto)
-values(1,'Manzana Verde','Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. ',2.50,87,'img/mverde.png');
+insert into productos(cod,categoria,nombre,descripcion,precio,stock,foto)
+values(1,1,'Manzana Verde','Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. ',2.50,87,'img/mverde.png');
 
-insert into productos(categoria,nombre,descripcion,precio,stock,foto)
-values(2,'Fresa','Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. ',2.50,87,'img/fresa.png');
+insert into productos(cod,categoria,nombre,descripcion,precio,stock,foto)
+values(2,2,'Fresa','Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. ',2.50,87,'img/fresa.png');
 
-insert into productos(categoria,nombre,descripcion,precio,stock,foto)
-values(3,'Naranja Wando','Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. ',2.50,87,'img/naranja_wando.png');
+insert into productos(cod,categoria,nombre,descripcion,precio,stock,foto)
+values(3,3,'Naranja Wando','Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. ',2.50,87,'img/naranja_wando.png');
 
-insert into productos(categoria,nombre,descripcion,precio,stock,foto)
-values(4,'Papaya','Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. ',2.50,87,'img/papaya.png');
+insert into productos(cod,categoria,nombre,descripcion,precio,stock,foto)
+values(4,4,'Papaya','Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. ',2.50,87,'img/papaya.png');
 
 update productos set foto='fresa.jpg' where cod=2;
 update productos set foto='mverde.png' where cod=1;
 update productos set foto='naranja.jpg' where cod=3;
 update productos set foto='papaya.jpg' where cod=4;
 
+delimiter $$
+create procedure sp_producto_q01()
+begin
+	select	ifnull(max(cod),0)+1 as nuevo_codigo
+    from	productos;
+end; $$
 
 delimiter $$
 create procedure sp_producto_i01(
-ar_categoria int(11), 
+ar_codigo int,
+ar_categoria int, 
 ar_nombre varchar(20), 
 ar_descripcion text, 
 ar_precio decimal(6,2), 
 ar_stock int(11), 
-ar_foto varchar(100))
+art_foto varchar(100))
 begin
-	insert into productos(categoria, nombre, descripcion, precio, stock, foto)
-    values(ar_cod, ar_categoria, ar_nombre, ar_descripcion, ar_precio, ar_stock, ar_foto);
+	insert into productos(cod, categoria, nombre, descripcion, precio, stock, foto)
+    values(ar_codigo, ar_categoria, ar_nombre, ar_descripcion, ar_precio, ar_stock, art_foto);
 end; $$
 delimiter $$
 
+delimiter $$
+create procedure sp_producto_q02()
+begin
+	select	cod, categoria, nombre, descripcion, precio, stock, foto 
+    from	productos;
+end; $$
+
+delimiter $$
+create procedure sp_producto_q03(in codigo int)
+begin
+	select	cod, categoria, nombre, descripcion, precio, stock, foto 
+    from	productos
+    where	cod=codigo;
+end; $$
 
 
-select cod, categoria, nombre, descripcion, precio, stock, foto from productos;
+create table categoria(
+id_categoria int not null primary key auto_increment,
+nombre varchar(100),
+estado char(1) default 'A');
+
+drop procedure sp_categoria_q01
+
+delimiter $$
+create procedure sp_categoria_q01()
+begin
+	Select id_categoria, nombre, estado from categoria;
+end; $$
+
+drop procedure sp_categoria_i01
+delimiter $$
+create procedure sp_categoria_i01(
+in nombre varchar(100))
+begin
+	insert into categoria(nombre)
+    values(nombre);
+end; $$
+
+delimiter $$
+create procedure sp_categoria_u01(
+in par_codigo int,
+in par_nombre varchar(100),
+in par_estado char(1))
+begin
+	Update	categoria
+    Set		nombre=par_nombre,
+			estado=par_estado
+    Where	id_categoria=par_codigo;
+end; $$
+
+delimiter $$
+create procedure sp_categoria_d01(
+in par_codigo int)
+begin
+	delete
+    from	categoria
+    Where	id_categoria=par_codigo;
+end; $$
+
+call sp_categoria_i01('BEBIDAS');
+call sp_categoria_i01('FRUTAS');
+call sp_categoria_i01('VERDURAS');
+
+call sp_categoria_q01()
+
+
